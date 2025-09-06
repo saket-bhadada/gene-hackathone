@@ -1,0 +1,89 @@
+* {
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f9f9f9;
+    margin: 0;
+}
+
+.container {
+    width: 100%;
+    max-width: 400px;
+    padding: 20px;
+}
+
+.profile-box {
+    background-color: #ffffff;
+    padding: 30px 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.profile-header {
+    margin-bottom: 25px;
+}
+
+.profile-image {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #cccccc;
+}
+
+h2 {
+    margin-top: 15px;
+    font-size: 22px;
+    color: #333333;
+}
+
+.profile-details {
+    text-align: left;
+    margin-bottom: 25px;
+}
+
+.detail {
+    margin-bottom: 15px;
+}
+
+.detail label {
+    font-weight: 500;
+    color: #555555;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.detail p {
+    color: #777777;
+    margin: 0;
+}
+
+button {
+    width: 100%;
+    padding: 14px;
+    background-color: #333333;
+    color: #ffffff;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+button:hover {
+    background-color: #555555;
+    transform: translateY(-2px);
+}
+
+@media (max-width: 480px) {
+    .profile-box {
+        padding: 25px 20px;
+    }
+}

@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Profile - Learning Platform</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f9f9f9;
+            margin: 0;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 400px;
+            padding: 20px;
+        }
+
+        .profile-box {
+            background-color: #ffffff;
+            padding: 30px 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .profile-header {
+            margin-bottom: 25px;
+        }
+
+        .profile-image {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #cccccc;
+        }
+
+        h2 {
+            margin-top: 15px;
+            font-size: 22px;
+            color: #333333;
+        }
+
+        .profile-details {
+            text-align: left;
+            margin-bottom: 25px;
+        }
+
+        .detail {
+            margin-bottom: 15px;
+        }
+
+        .detail label {
+            font-weight: 500;
+            color: #555555;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .detail p, .detail input, .detail textarea {
+            color: #777777;
+            margin: 0;
+            width: 100%;
+            border: 1px solid #cccccc;
+            border-radius: 6px;
+            padding: 8px;
+            font-size: 14px;
+            background-color: #fafafa;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .detail input:focus, .detail textarea:focus {
+            border-color: #999999;
+            box-shadow: 0 0 8px rgba(153, 153, 153, 0.2);
+            outline: none;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            background-color: #333333;
+            color: #ffffff;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        button:hover {
+            background-color: #555555;
+            transform: translateY(-2px);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .button-group button {
+            width: 45%;
+        }
+
+        @media (max-width: 480px) {
+            .profile-box {
+                padding: 25px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="profile-box">
+            <div class="profile-header">
+                <img id="avatar" src="" alt="Profile Picture" class="profile-image" />
+                <h2 id="name">User Name</h2>
+            </div>
+            <div class="profile-details">
+                <div class="detail">
+                    <label for="email">Email</label>
+                    <p id="email">user@example.com</p>
+                </div>
+                <div class="detail">
+                    <label for="username">Username</label>
+                    <p id="username">username_here</p>
+                </div>
+                <div class="detail">
+                    <label for="bio">Bio</label>
+                    <p id="bio">This is a sample bio.</p>
+                </div>
+            </div>
+            <div id="action-buttons">
+                <button id="edit-btn">Edit Profile</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Example user data — replace with real data from API or localStorage
+        let user = { // database
+            name: "John Doe",
+            email: "johndoe@example.com",
+            username: "john_doe",
+            bio: "Passionate learner and coding enthusiast."
+        };
+
+        const avatar = document.getElementById('avatar');
+        const nameEl = document.getElementById('name');
+        const emailEl = document.getElementById('email');
+        const usernameEl = document.getElementById('username');
+        const bioEl = document.getElementById('bio');
+        const actionButtons = document.getElementById('action-buttons');
+
+        // Generate avatar URL
+        const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=0D8ABC&color=fff&size=128`;
+        avatar.src = avatarUrl;
+
+        // Populate profile details
+        nameEl.textContent = user.name;
+        emailEl.textContent = user.email;
+        usernameEl.textContent = user.username;
+        bioEl.textContent = user.bio;
+
+        // Edit button functionality
+        actionButtons.addEventListener('click', function(e) {
+            if (e.target.id === 'edit-btn') {
+                enterEditMode();
+            }
+        });
+
+        function enterEditMode() {
+            // Replace text with inputs
+            emailEl.innerHTML = `<input type="email" id="email-input" value="${user.email}" />`;
+            usernameEl.innerHTML = `<input type="text" id="username-input" value="${user.username}" />`;
+            bioEl.innerHTML = `<textarea id="bio-input" rows="3">${user.bio}</textarea>`;
+
+            // Change buttons to Save and Cancel
+            actionButtons.innerHTML = `
+                <div class="button-group">
+                    <button id="save-btn">Save</button>
+                    <button id="cancel-btn">Cancel</button>
+                </div>
+            `;
+
+            // Add event listeners for Save and Cancel
+            document.getElementById('save-btn').addEventListener('click', saveProfile);
+            document.getElementById('cancel-btn').addEventListener('click', cancelEdit);
+        }
+
+        function saveProfile() {
+            // Get new values
+            const newEmail = document.getElementById('email-input').value.trim();
+            const newUsername = document.getElementById('username-input').value.trim();
+            const newBio = document.getElementById('bio-input').value.trim();
+
+            // Update user object
+            user.email = newEmail;
+            user.username = newUsername;
+            user.bio = newBio;
+
+            // Exit edit mode and update display
+            exitEditMode();
+        }
+
+        function cancelEdit() {
+            // Simply exit edit mode without saving
+            exitEditMode();
+        }
+
+        function exitEditMode() {
+            // Restore original layout
+            emailEl.innerHTML = user.email;
+            usernameEl.innerHTML = user.username;
+            bioEl.innerHTML = user.bio;
+
+            actionButtons.innerHTML = `<button id="edit-btn">Edit Profile</button>`;
+        }
+    </script>
+
+</body>
+</html>
+
+
+
