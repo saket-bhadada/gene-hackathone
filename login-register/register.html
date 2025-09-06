@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Account - CampusGuru</title>
+    <style>
+        /* Basic Reset & Font */
+        body {
+            margin: 0;
+            font-family: sans-serif;
+            background-color: #f0f9ff;
+        }
+        /* Page container */
+        .container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            box-sizing: border-box;
+        }
+        /* Auth Page Styles */
+        .auth-card {
+            background-color: white;
+            border-radius: 24px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            width: 100%;
+            max-width: 480px;
+            border: 1px solid #e0e7ff;
+            box-sizing: border-box;
+        }
+        .auth-header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        .auth-title {
+            font-size: 36px;
+            font-weight: 800;
+            color: #1d4ed8;
+            margin: 0;
+        }
+        .auth-subtitle {
+            color: #6b7280;
+            font-size: 18px;
+            margin-top: 4px;
+        }
+        .auth-form {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .auth-form label {
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 4px;
+            display: block;
+        }
+        .input-container {
+            display: flex;
+            align-items: center;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            padding-right: 12px;
+        }
+        .auth-form input {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            font-size: 16px;
+            box-sizing: border-box;
+            outline: none;
+            background-color: transparent;
+        }
+        .toggle-password-btn {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            color: #6b7280;
+            width: 50px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        .tabs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            background-color: #e0f2fe;
+            border-radius: 9999px;
+            padding: 4px;
+            margin-bottom: 24px;
+        }
+        .tabs button {
+            padding: 8px;
+            border-radius: 9999px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            background-color: transparent;
+            color: #374151;
+        }
+        .tabs button.active {
+            background-color: #ffffff;
+            color: #1d4ed8;
+        }
+        .submit-btn {
+            width: 100%;
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            padding: 16px;
+            border-radius: 16px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 12px;
+        }
+        .submit-btn:disabled {
+            background-color: #93c5fd;
+            cursor: not-allowed;
+        }
+        .form-link {
+            text-align: center;
+            margin-top: 1rem;
+            color: #6b7280;
+        }
+        .form-link a {
+            color: #1d4ed8;
+            font-weight: 600;
+            text-decoration: underline;
+        }
+        .error-message {
+            color: red;
+            text-align: center;
+            min-height: 1.2em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <h1 class="auth-title">CampusGuru</h1>
+                <p class="auth-subtitle">Create Account</p>
+            </div>
+            <form class="auth-form" id="register-form">
+                <div class="tabs">
+                    <button type="button" id="register-role-student" class="active">Student</button>
+                    <button type="button" id="register-role-teacher">Teacher</button>
+                </div>
+                <div>
+                    <label for="register-fullname">Full Name</label>
+                    <div class="input-container"><input type="text" id="register-fullname" placeholder="Enter your full name" required></div>
+                </div>
+                <div>
+                    <label for="register-email">Email Address</label>
+                    <div class="input-container"><input type="email" id="register-email" placeholder="Enter your email" required></div>
+                </div>
+                <div>
+                    <label for="register-password">Password</label>
+                    <div class="input-container">
+                        <input type="password" id="register-password" placeholder="Create a password" required>
+                        <button type="button" class="toggle-password-btn" data-target="register-password">Show</button>
+                    </div>
+                </div>
+                <div>
+                    <label for="register-confirm-password">Confirm Password</label>
+                    <div class="input-container">
+                        <input type="password" id="register-confirm-password" placeholder="Re-enter your password" required>
+                        <button type="button" class="toggle-password-btn" data-target="register-confirm-password">Show</button>
+                    </div>
+                </div>
+                <!-- Role-specific fields -->
+                <div id="register-student-fields">
+                    <label for="register-course">Course/Program</label>
+                    <div class="input-container"><input type="text" id="register-course" placeholder="e.g., B.Tech in CSE" required></div>
+                </div>
+                <div id="register-teacher-fields" style="display: none;">
+                    <label for="register-specialization">Specialization</label>
+                    <div class="input-container"><input type="text" id="register-specialization" placeholder="e.g., Mathematics, Physics" required></div>
+                </div>
+                <p class="error-message" id="register-error"></p>
+                <button type="submit" class="submit-btn" id="register-submit-btn">Create Account</button>
+            </form>
+            <p class="form-link">Already have an account? <a href="login.html">Login here</a></p>
+        </div>
+    </div>
+
+    <!-- Firebase SDKs -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js";
+        import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyC9QoH__HaVHVSNbC5clGgHrafCxjHzr_A",
+            authDomain: "genehackathon.firebaseapp.com",
+            projectId: "genehackathon",
+            storageBucket: "genehackathon.appspot.com",
+            messagingSenderId: "540527978516",
+            appId: "1:540527978516:web:8f9d7f272dfffa34a15f01"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // Role Tabs in Registration
+        const studentRoleBtn = document.getElementById('register-role-student');
+        const teacherRoleBtn = document.getElementById('register-role-teacher');
+        const studentFields = document.getElementById('register-student-fields');
+        const teacherFields = document.getElementById('register-teacher-fields');
+
+        studentRoleBtn.addEventListener('click', () => {
+            studentRoleBtn.classList.add('active');
+            teacherRoleBtn.classList.remove('active');
+            studentFields.style.display = 'block';
+            teacherFields.style.display = 'none';
+        });
+
+        teacherRoleBtn.addEventListener('click', () => {
+            teacherRoleBtn.classList.add('active');
+            studentRoleBtn.classList.remove('active');
+            teacherFields.style.display = 'block';
+            studentFields.style.display = 'none';
+        });
+
+        // Password visibility toggles
+        document.querySelectorAll('.toggle-password-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const targetInput = document.getElementById(btn.dataset.target);
+                if (targetInput.type === 'password') {
+                    targetInput.type = 'text';
+                    btn.textContent = 'Hide';
+                } else {
+                    targetInput.type = 'password';
+                    btn.textContent = 'Show';
+                }
+            });
+        });
+
+        // Registration Logic
+        const registerForm = document.getElementById('register-form');
+        registerForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const fullName = document.getElementById('register-fullname').value;
+            const email = document.getElementById('register-email').value;
+            const password = document.getElementById('register-password').value;
+            const confirmPassword = document.getElementById('register-confirm-password').value;
+            const role = studentRoleBtn.classList.contains('active') ? 'Student' : 'Teacher';
+            const course = document.getElementById('register-course').value;
+            const specialization = document.getElementById('register-specialization').value;
+            const errorEl = document.getElementById('register-error');
+            const submitBtn = document.getElementById('register-submit-btn');
+
+            if (password !== confirmPassword) {
+                errorEl.textContent = "Passwords do not match.";
+                return;
+            }
+
+            errorEl.textContent = '';
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Creating Account...';
+
+            try {
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+                
+                const userData = { uid: user.uid, email, fullName, role };
+                if (role === 'Teacher') {
+                    userData.specialization = specialization;
+                } else {
+                     userData.courseProgram = course;
+                }
+
+                await setDoc(doc(db, "users", user.uid), userData);
+                
+                // On success, redirect to login page
+                window.location.href = 'login.html';
+
+            } catch (err) {
+                errorEl.textContent = err.message.replace('Firebase: ', '');
+            }
+            
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Create Account';
+        });
+    </script>
+</body>
+</html>
+
+

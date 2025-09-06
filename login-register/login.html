@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - CampusGuru</title>
+    <style>
+        /* Basic Reset & Font */
+        body {
+            margin: 0;
+            font-family: sans-serif;
+            background-color: #f0f9ff;
+        }
+        /* Page container */
+        .container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            box-sizing: border-box;
+        }
+        /* Auth Page Styles */
+        .auth-card {
+            background-color: white;
+            border-radius: 24px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            width: 100%;
+            max-width: 480px;
+            border: 1px solid #e0e7ff;
+            box-sizing: border-box;
+        }
+        .auth-header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        .auth-title {
+            font-size: 36px;
+            font-weight: 800;
+            color: #1d4ed8;
+            margin: 0;
+        }
+        .auth-subtitle {
+            color: #6b7280;
+            font-size: 18px;
+            margin-top: 4px;
+        }
+        .auth-form {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .auth-form label {
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 4px;
+            display: block;
+        }
+        .input-container {
+            display: flex;
+            align-items: center;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            padding-right: 12px;
+        }
+        .auth-form input {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            font-size: 16px;
+            box-sizing: border-box;
+            outline: none;
+            background-color: transparent;
+        }
+        .toggle-password-btn {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            color: #6b7280;
+        }
+        .submit-btn {
+            width: 100%;
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            padding: 16px;
+            border-radius: 16px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 12px;
+        }
+        .submit-btn:disabled {
+            background-color: #93c5fd;
+            cursor: not-allowed;
+        }
+        .form-link {
+            text-align: center;
+            margin-top: 1rem;
+            color: #6b7280;
+        }
+        .form-link a {
+            color: #1d4ed8;
+            font-weight: 600;
+            text-decoration: underline;
+        }
+        .error-message {
+            color: red;
+            text-align: center;
+            min-height: 1.2em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <h1 class="auth-title">Welcome Back!</h1>
+                <p class="auth-subtitle">Login to your account</p>
+            </div>
+            <form class="auth-form" id="login-form">
+                 <div>
+                    <label for="login-email">Email Address</label>
+                    <div class="input-container"><input type="email" id="login-email" placeholder="Enter your email" required></div>
+                </div>
+                <div>
+                    <label for="login-password">Password</label>
+                    <div class="input-container">
+                        <input type="password" id="login-password" placeholder="Enter your password" required>
+                        <button type="button" class="toggle-password-btn" data-target="login-password">👁️</button>
+                    </div>
+                </div>
+                <p class="error-message" id="login-error"></p>
+                <button type="submit" class="submit-btn" id="login-submit-btn">Login</button>
+            </form>
+             <p class="form-link">Don't have an account? <a href="register.html">Register here</a></p>
+        </div>
+    </div>
+
+    <!-- Firebase SDKs -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js";
+        
+        const firebaseConfig = {
+            apiKey: "AIzaSyC9QoH__HaVHVSNbC5clGgHrafCxjHzr_A",
+            authDomain: "genehackathon.firebaseapp.com",
+            projectId: "genehackathon",
+            storageBucket: "genehackathon.appspot.com",
+            messagingSenderId: "540527978516",
+            appId: "1:540527978516:web:8f9d7f272dfffa34a15f01"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        // Redirect if already logged in
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                window.location.href = 'index.html';
+            }
+        });
+
+        // Password visibility toggle
+        document.querySelectorAll('.toggle-password-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const targetInput = document.getElementById(btn.dataset.target);
+                if (targetInput.type === 'password') {
+                    targetInput.type = 'text';
+                    btn.textContent = 'hide';
+                } else {
+                    targetInput.type = 'password';
+                    btn.textContent = 'show';
+                }
+            });
+        });
+
+        // Login Logic
+        const loginForm = document.getElementById('login-form');
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            const errorEl = document.getElementById('login-error');
+            const submitBtn = document.getElementById('login-submit-btn');
+            
+            errorEl.textContent = '';
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Logging In...';
+
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+                // The onAuthStateChanged listener will handle the redirect
+            } catch(err) {
+                errorEl.textContent = err.message.replace('Firebase: ', '');
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Login';
+            }
+        });
+    </script>
+</body>
+</html>
+
