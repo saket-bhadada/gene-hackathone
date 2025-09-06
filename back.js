@@ -10,8 +10,12 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(__dirname));
 app.get("/", (req, res) => {
-  res.sendFile(__dirname + "/frontend/index.html");
+  if (!res.session || !req.session.user) {
+    return res.sendFile(__dirname + "/login-register/login.html");
+  }
+  res.redirect("index.html");
 });
+app.get()
 app.listen(port, () => {
   console.log(`listning to the port ${port}`);
 });

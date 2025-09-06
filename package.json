@@ -18,6 +18,7 @@
     "nodemon": "node_modules/.bin/nodemon"
   },
   "dependencies": {
-    "express": "^5.1.0"
+    "express": "^5.1.0",
+    "express-session": "^1.18.2"
   }
 }
